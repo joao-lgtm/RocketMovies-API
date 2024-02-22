@@ -26,7 +26,7 @@ class MovieController {
     }
 
     async show(request, response) {
-        const { id } = request.params;
+        const  user_id  = request.user.id
 
         const movie = await knex("movie_notes").where({ id }).first();
         const tags = await knex("movie_tags").where({ note_id: id }).orderBy("name");
@@ -35,7 +35,7 @@ class MovieController {
     }
 
     async delete(request, response) {
-        const { id } = request.params;
+        const  user_id  = request.user.id
 
         await knex("movie_notes").where({ id }).delete();
 
