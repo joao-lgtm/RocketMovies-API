@@ -25,10 +25,9 @@ class UserController {
 
     async update(request, response) {
         const { name, email, password, old_password } = request.body;
-        const  user_id  = request.user.id
+        const user_id = request.user.id
 
         const database = await sqliteConnection();
-        console.log()
         const user = await database.get("SELECT * FROM users WHERE id = (?)", [user_id]);
 
 
@@ -70,6 +69,16 @@ class UserController {
             , [user.name, user.email, user.password, user_id])
 
         return response.json()
+    }
+
+    async getUser(request, response) {
+        const id = request.params.user_id
+        
+
+        const database = await sqliteConnection();
+        const user = await database.get("SELECT name,avatar FROM users WHERE id = (?)", [id]);
+
+        return response.json(user);
     }
 }
 
