@@ -26,18 +26,19 @@ class MovieController {
     }
 
     async show(request, response) {
-        const  user_id  = request.user.id
+        const { id } = request.params;
 
-        const movie = await knex("movie_notes").where({ user_id }).first();
-        const tags = await knex("movie_tags").where({ note_id: user_id }).orderBy("name");
+        const movie = await knex("movie_notes").where({ id }).first();
+        const tags = await knex("movie_tags").where({ note_id: id }).orderBy("name");
+        
 
         return response.json({ ...movie, tags })
     }
 
     async delete(request, response) {
-        const  user_id  = request.user.id
+        const { id } = request.params;
 
-        await knex("movie_notes").where({ user_id }).delete();
+        await knex("movie_notes").where({ id }).delete();
 
         return response.json()
     }
@@ -52,7 +53,6 @@ class MovieController {
 
         if (name) {
             const filterTags = name.split(',').map(name => name.trim());
-            console.log(filterTags)
             notes = await knex("movie_tags")
                 .select([
                     "movie_notes.id",
@@ -72,7 +72,7 @@ class MovieController {
                 .orderBy("title");
         }
 
-        const userTags = await knex("movie_tags").where({ user_id })
+        const userTags = await knex("movie_tags")
         const notesWithTags = notes.map(note => {
             const notesTags = userTags.filter(tag => tag.note_id === note.id);
 
